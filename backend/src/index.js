@@ -1,0 +1,35 @@
+require('dotenv').config();
+const express = require('express');
+const cors = require('cors');
+
+const authRoutes = require('./routes/auth');
+const userRoutes = require('./routes/users');
+const exerciseRoutes = require('./routes/exercises');
+const workoutRoutes = require('./routes/workouts');
+const foodRoutes = require('./routes/food');
+const coachRoutes = require('./routes/coach');
+
+const app = express();
+
+app.use(cors({ origin: process.env.FRONTEND_ORIGIN || '*' }));
+app.use(express.json({ limit: '12mb' })); // food photos arrive as base64 JSON
+
+app.get('/health', (req, res) => res.json({ ok: true }));
+
+app.use('/api/auth', authRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/exercises', exerciseRoutes);
+app.use('/api/workouts', workoutRoutes);
+app.use('/api/food', foodRoutes);
+app.use('/api/coach', coachRoutes);
+
+app.use((req, res) => res.status(404).json({ error: 'Not found' }));
+
+// eslint-disable-next-line no-unused-vars
+app.use((err, req, res, next) => {
+  console.error(err);
+  res.status(500).json({ error: 'Something went wrong' });
+});
+
+const PORT = process.env.PORT || 4000;
+app.listen(PORT, () => console.log(`FitAI backend listening on :${PORT}`));

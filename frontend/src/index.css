@@ -1,0 +1,68 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body, #root {
+  height: 100%;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+}
+
+h1, h2, h3, .font-display {
+  font-family: 'Space Grotesk', sans-serif;
+}
+
+/* Centers the app like a phone screen on wider viewports, full-bleed on mobile */
+.app-shell {
+  max-width: 430px;
+  margin: 0 auto;
+  min-height: 100vh;
+  background: #FAFAF8;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.screen-content {
+  flex: 1;
+  overflow-y: auto;
+  padding-bottom: 96px;
+}
+
+.card {
+  background: #FFFFFF;
+  border: 1px solid #E7E6E1;
+  border-radius: 1.25rem;
+}
+
+.btn-primary {
+  background: #101010;
+  color: #FAFAF8;
+  border-radius: 999px;
+  font-weight: 600;
+  transition: opacity 0.15s ease;
+}
+.btn-primary:active {
+  opacity: 0.85;
+}
+.btn-primary:disabled {
+  opacity: 0.4;
+}
+
+.btn-secondary {
+  background: #FFFFFF;
+  border: 1px solid #101010;
+  color: #101010;
+  border-radius: 999px;
+  font-weight: 600;
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
