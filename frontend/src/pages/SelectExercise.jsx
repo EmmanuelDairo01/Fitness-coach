@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ChevronLeft, Search } from 'lucide-react';
+import { ChevronLeft, Search, Info } from 'lucide-react';
 import { api } from '../api/client';
+import ExerciseDetailModal from '../components/ExerciseDetailModal';
 
 const CATEGORIES = ['All', 'Chest', 'Back', 'Legs', 'Shoulder', 'Arms', 'Core'];
 
@@ -10,6 +11,7 @@ export default function SelectExercise() {
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState('All');
   const [exercises, setExercises] = useState([]);
+  const [detailExercise, setDetailExercise] = useState(null);
 
   useEffect(() => {
     const params = new URLSearchParams();
@@ -91,7 +93,13 @@ export default function SelectExercise() {
                   </span>
                 )}
               </div>
-              <span className="text-sm font-medium">{ex.name}</span>
+              <span className="flex-1 text-sm font-medium">{ex.name}</span>
+              <button
+                onClick={(e) => { e.stopPropagation(); setDetailExercise(ex); }}
+                className="w-7 h-7 flex items-center justify-center rounded-full text-muted hover:bg-line"
+              >
+                <Info size={15} />
+              </button>
             </button>
           ))}
           {exercises.length === 0 && (
@@ -99,6 +107,7 @@ export default function SelectExercise() {
           )}
         </div>
       </div>
+      <ExerciseDetailModal exercise={detailExercise} onClose={() => setDetailExercise(null)} />
     </div>
   );
 }
