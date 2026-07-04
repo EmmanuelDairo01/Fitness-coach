@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
+const initDb = require('./init');
 
 const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/users');
@@ -32,4 +33,6 @@ app.use((err, req, res, next) => {
 });
 
 const PORT = process.env.PORT || 4000;
-app.listen(PORT, () => console.log(`FitAI backend listening on :${PORT}`));
+initDb()
+  .then(() => app.listen(PORT, () => console.log(`FitAI backend listening on :${PORT}`)))
+  .catch((err) => { console.error('Database init failed:', err); process.exit(1); });
