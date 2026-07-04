@@ -12,7 +12,8 @@ const coachRoutes = require('./routes/coach');
 
 const app = express();
 
-app.use(cors({ origin: process.env.FRONTEND_ORIGIN || '*' }));
+const allowedOrigin = (process.env.FRONTEND_ORIGIN || '').replace(/\/$/, '') || '*';
+app.use(cors({ origin: allowedOrigin }));
 app.use(express.json({ limit: '12mb' })); // food photos arrive as base64 JSON
 
 app.get('/health', (req, res) => res.json({ ok: true }));
