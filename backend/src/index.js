@@ -13,7 +13,15 @@ const coachRoutes = require('./routes/coach');
 const app = express();
 
 const allowedOrigin = (process.env.FRONTEND_ORIGIN || '').replace(/\/$/, '') || '*';
-app.use(cors({ origin: allowedOrigin }));
+app.use(cors({
+  origin: (origin, callback) => {
+    if (!origin || origin === allowedOrigin || origin.endsWith('.vercel.app')) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  }
+}));
 app.use(express.json({ limit: '12mb' })); // food photos arrive as base64 JSON
 
 app.get('/health', (req, res) => res.json({ ok: true }));

@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { Home, Dumbbell, Camera, LineChart, User } from 'lucide-react';
+import { Home, Dumbbell, Camera, LineChart, User } from 'lucide-react';  // imported icons
 
 const tabs = [
   { to: '/dashboard', label: 'Home', icon: Home },
@@ -12,8 +12,8 @@ const tabs = [
 
 export default function BottomNav() {
   return (
-    <nav className="absolute bottom-0 left-0 right-0 bg-card border-t border-line">
-      <div className="flex items-center justify-between px-4 py-2">
+    <nav className="absolute bottom-0 left-0 right-0 bg-card border-t border-line"> // Bottom nav bar placement
+      <div className="flex items-center justify-between px-4 py-2"> 
         {tabs.map(({ to, label, icon: Icon }) => (
           <NavLink
             key={to}
