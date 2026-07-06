@@ -14,22 +14,38 @@ router.post('/analyze', async (req, res) => {
     const { imageBase64 } = req.body;
     if (!imageBase64) return res.status(400).json({ error: 'imageBase64 is required' });
 
-    const aiRes = await fetch(`${AI_SERVICE_URL}/analyze-food`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ image_base64: imageBase64 }),
-    });
+    const endpoint = `${AI_SERVICE_URL}/analyze-food`;
+    console.log('[food/analyze] calling AI service at:', endpoint);
+
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 30000);
+
+    let aiRes;
+    try {
+      aiRes = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ image_base64: imageBase64 }),
+        signal: controller.signal,
+      });
+    } finally {
+      clearTimeout(timeout);
+    }
 
     if (!aiRes.ok) {
       const detail = await aiRes.text();
-      console.error('AI service error:', detail);
+      console.error('[food/analyze] AI service returned', aiRes.status, detail);
       return res.status(502).json({ error: 'Could not analyze the photo right now' });
     }
 
     const analysis = await aiRes.json();
+    console.log('[food/analyze] success, confidence:', analysis.confidence);
     res.json({ analysis });
   } catch (err) {
-    console.error(err);
+    console.error('[food/analyze] error:', err.message);
+    if (err.name === 'AbortError') {
+      return res.status(504).json({ error: 'AI service took too long — try again' });
+    }
     res.status(500).json({ error: 'Could not analyze the photo' });
   }
 });
